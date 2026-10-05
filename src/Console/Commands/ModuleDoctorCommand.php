@@ -157,21 +157,38 @@ class ModuleDoctorCommand extends Command
                 }
             }
 
+            // Dependency Check
+            $depIssues = [];
+            if ($module->isEnabled()) {
+                foreach ($module->getDependencies() as $depName) {
+                    $depModule = $this->registry->find($depName);
+                    if ($depModule === null) {
+                        $depIssues[] = "Missing [{$depName}]";
+                        $moduleIssues++;
+                    } elseif ($depModule->isDisabled()) {
+                        $depIssues[] = "Disabled [{$depName}]";
+                        $moduleIssues++;
+                    }
+                }
+            }
+
             if ($moduleIssues > 0) {
                 $hasIssues = true;
             }
 
             $rows[] = [
                 'module' => $module->getName(),
+                'status' => $module->isEnabled() ? '<info>Enabled</info>' : '<comment>Disabled</comment>',
                 'dirs' => empty($missingDirs) ? '<info>Complete</info>' : '<comment>Missing: '.implode(', ', $missingDirs).'</comment>',
                 'provider' => $providerValid ? '<info>Active</info>' : ($providerExists ? '<comment>Unregistered</comment>' : '<error>Missing</error>'),
                 'routes' => ($webRoutes && $apiRoutes && $routesSyntaxOk) ? '<info>OK</info>' : (! $routesSyntaxOk ? '<error>Syntax Error</error>' : '<comment>Partial</comment>'),
+                'dependencies' => empty($depIssues) ? '<info>OK</info>' : '<error>'.implode(', ', $depIssues).'</error>',
                 'health' => $moduleIssues === 0 ? '<info>Healthy</info>' : "<comment>{$moduleIssues} Warning(s)</comment>",
             ];
         }
 
         $this->newLine();
-        $this->table(['Module', 'Directories', 'Provider', 'Routes', 'Health Status'], $rows);
+        $this->table(['Module', 'Status', 'Directories', 'Provider', 'Routes', 'Dependencies', 'Health Status'], $rows);
 
         if ($fixedCount > 0) {
             $this->components->info("Doctor auto-repaired [{$fixedCount}] item(s).");

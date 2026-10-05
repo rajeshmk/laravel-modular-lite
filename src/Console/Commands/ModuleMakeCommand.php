@@ -86,11 +86,22 @@ class ModuleMakeCommand extends GeneratorCommand
         $viewContent = "<div>\n    <h1>Welcome to {$moduleName} Module</h1>\n</div>\n";
         $this->writeFile($module->getPath('Views/index.blade.php'), $viewContent, $force);
 
-        // 5. Initial Database Seeder
+        // 5. Module Manifest
+        $manifestContent = json_encode([
+            'name' => $moduleName,
+            'description' => "{$moduleName} module",
+            'version' => '1.0.0',
+            'enabled' => true,
+            'dependencies' => [],
+            'priority' => 0,
+        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES).PHP_EOL;
+        $this->writeFile($module->getPath('module.json'), $manifestContent, $force);
+
+        // 6. Initial Database Seeder
         $seederContent = $this->replacePlaceholders($this->getStub('seeder.database'), $replacements);
         $this->writeFile($module->getPath("Database/Seeders/{$moduleName}DatabaseSeeder.php"), $seederContent, $force);
 
-        // 6. Gitkeep empty directories
+        // 7. Gitkeep empty directories
         $emptyDirs = [
             'Controllers',
             'Models',

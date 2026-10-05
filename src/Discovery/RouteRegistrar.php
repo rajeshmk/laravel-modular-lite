@@ -26,7 +26,7 @@ final readonly class RouteRegistrar
         $apiPrefix = (string) $this->config->get('modular-lite.api_prefix', 'api');
 
         /** @var Module $module */
-        foreach ($registry->all() as $module) {
+        foreach ($registry->enabled() as $module) {
             if ($module->hasWebRoutes()) {
                 $this->router
                     ->middleware('web')

@@ -16,7 +16,7 @@ final readonly class ProviderRegistrar
     public function register(ModuleRegistry $registry): void
     {
         /** @var Module $module */
-        foreach ($registry->all() as $module) {
+        foreach ($registry->enabled() as $module) {
             if ($module->hasProvider()) {
                 $providerClass = $module->getProviderClass();
                 if (class_exists($providerClass)) {

@@ -30,17 +30,25 @@ class ModuleListCommand extends Command
             return self::SUCCESS;
         }
 
-        $rows = $modules->map(fn (Module $module): array => [
-            'name' => $module->getName(),
-            'slug' => $module->getSlug(),
-            'routes' => ($module->hasWebRoutes() || $module->hasApiRoutes()) ? '<info>Yes</info>' : '<comment>No</comment>',
-            'migrations' => $module->hasMigrations() ? '<info>Yes</info>' : '<comment>No</comment>',
-            'models' => is_dir($module->getPath('Models')) ? '<info>Yes</info>' : '<comment>No</comment>',
-            'controllers' => is_dir($module->getPath('Controllers')) ? '<info>Yes</info>' : '<comment>No</comment>',
-            'provider' => $module->hasProvider() ? '<info>Yes</info>' : '<comment>No</comment>',
-        ])->all();
+        $rows = $modules->map(function (Module $module): array {
+            $deps = $module->getDependencies();
+            $depsFormatted = empty($deps) ? '<comment>-</comment>' : implode(', ', $deps);
+            $status = $module->isEnabled() ? '<info>Enabled</info>' : '<fg=red>Disabled</>';
 
-        $this->table(['Module', 'Slug', 'Routes', 'Migrations', 'Models', 'Controllers', 'Provider'], $rows);
+            return [
+                'name' => $module->getName(),
+                'status' => $status,
+                'dependencies' => $depsFormatted,
+                'slug' => $module->getSlug(),
+                'routes' => ($module->hasWebRoutes() || $module->hasApiRoutes()) ? '<info>Yes</info>' : '<comment>No</comment>',
+                'migrations' => $module->hasMigrations() ? '<info>Yes</info>' : '<comment>No</comment>',
+                'models' => is_dir($module->getPath('Models')) ? '<info>Yes</info>' : '<comment>No</comment>',
+                'controllers' => is_dir($module->getPath('Controllers')) ? '<info>Yes</info>' : '<comment>No</comment>',
+                'provider' => $module->hasProvider() ? '<info>Yes</info>' : '<comment>No</comment>',
+            ];
+        })->all();
+
+        $this->table(['Module', 'Status', 'Dependencies', 'Slug', 'Routes', 'Migrations', 'Models', 'Controllers', 'Provider'], $rows);
 
         return self::SUCCESS;
     }

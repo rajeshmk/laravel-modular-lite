@@ -23,6 +23,101 @@ final readonly class Module
         private ?array $cachedData = null
     ) {}
 
+    public function getManifestPath(): string
+    {
+        return $this->getPath('module.json');
+    }
+
+    public function hasManifest(): bool
+    {
+        return file_exists($this->getManifestPath());
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getManifest(): array
+    {
+        if ($this->cachedData !== null && isset($this->cachedData['manifest'])) {
+            return (array) $this->cachedData['manifest'];
+        }
+
+        $manifestPath = $this->getManifestPath();
+        if (file_exists($manifestPath)) {
+            $data = json_decode((string) file_get_contents($manifestPath), true);
+            if (is_array($data)) {
+                return $data;
+            }
+        }
+
+        return [
+            'name' => $this->name,
+            'description' => "{$this->name} module",
+            'version' => '1.0.0',
+            'enabled' => true,
+            'dependencies' => [],
+            'priority' => 0,
+        ];
+    }
+
+    public function isEnabled(): bool
+    {
+        if ($this->cachedData !== null && isset($this->cachedData['enabled'])) {
+            return (bool) $this->cachedData['enabled'];
+        }
+
+        return (bool) ($this->getManifest()['enabled'] ?? true);
+    }
+
+    public function isDisabled(): bool
+    {
+        return ! $this->isEnabled();
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    public function getDependencies(): array
+    {
+        if ($this->cachedData !== null && isset($this->cachedData['dependencies'])) {
+            return (array) $this->cachedData['dependencies'];
+        }
+
+        return (array) ($this->getManifest()['dependencies'] ?? []);
+    }
+
+    public function getDescription(): string
+    {
+        return (string) ($this->getManifest()['description'] ?? "{$this->name} module");
+    }
+
+    public function getVersion(): string
+    {
+        return (string) ($this->getManifest()['version'] ?? '1.0.0');
+    }
+
+    public function getPriority(): int
+    {
+        return (int) ($this->getManifest()['priority'] ?? 0);
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    public function writeManifest(array $data): void
+    {
+        $manifest = array_merge($this->getManifest(), $data);
+        file_put_contents(
+            $this->getManifestPath(),
+            json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES).PHP_EOL
+        );
+    }
+
+    public function setEnabled(bool $enabled): void
+    {
+        $this->writeManifest(['enabled' => $enabled]);
+    }
+
     public function getName(): string
     {
         return $this->name;
@@ -375,6 +470,11 @@ final readonly class Module
         return [
             'name' => $this->name,
             'slug' => $this->getSlug(),
+            'enabled' => $this->isEnabled(),
+            'dependencies' => $this->getDependencies(),
+            'description' => $this->getDescription(),
+            'version' => $this->getVersion(),
+            'manifest' => $this->getManifest(),
             'path' => $this->path,
             'namespace' => $this->namespace,
             'module_namespace' => $this->getNamespace(),

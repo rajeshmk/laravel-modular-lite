@@ -22,9 +22,9 @@ it('lists all modules via module:list', function () {
     $this->artisan('module:list')
         ->assertSuccessful()
         ->expectsTable(
-            ['Module', 'Slug', 'Routes', 'Migrations', 'Models', 'Controllers', 'Provider'],
+            ['Module', 'Status', 'Dependencies', 'Slug', 'Routes', 'Migrations', 'Models', 'Controllers', 'Provider'],
             [
-                ['Warehouse', 'warehouse', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes'],
+                ['Warehouse', 'Enabled', '-', 'warehouse', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes'],
             ]
         );
 });

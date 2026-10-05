@@ -16,7 +16,7 @@ final readonly class ViewRegistrar
     public function register(ModuleRegistry $registry): void
     {
         /** @var Module $module */
-        foreach ($registry->all() as $module) {
+        foreach ($registry->enabled() as $module) {
             if ($module->hasViews()) {
                 $this->view->addNamespace($module->getSlug(), $module->getViewsPath());
             }

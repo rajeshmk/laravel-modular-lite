@@ -23,7 +23,7 @@ final readonly class ConfigRegistrar
         }
 
         /** @var Module $module */
-        foreach ($registry->all() as $module) {
+        foreach ($registry->enabled() as $module) {
             if ($module->hasConfig()) {
                 $configPath = $module->getConfigPath();
                 if (file_exists($configPath)) {

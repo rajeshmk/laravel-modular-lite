@@ -16,7 +16,7 @@ final readonly class MigrationRegistrar
     public function register(ModuleRegistry $registry): void
     {
         /** @var Module $module */
-        foreach ($registry->all() as $module) {
+        foreach ($registry->enabled() as $module) {
             if ($module->hasMigrations()) {
                 $this->app->afterResolving('migrator', function ($migrator) use ($module) {
                     $migrator->path($module->getMigrationsPath());

@@ -19,7 +19,7 @@ final readonly class CommandRegistrar
         $commandClasses = [];
 
         /** @var Module $module */
-        foreach ($registry->all() as $module) {
+        foreach ($registry->enabled() as $module) {
             $classes = $module->getCommandClasses();
             if (! empty($classes)) {
                 $commandClasses = array_merge($commandClasses, $classes);

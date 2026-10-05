@@ -163,7 +163,44 @@ class ModuleRenameCommand extends Command implements PromptsForMissingInput
             }
         }
 
-        // 4. Invalidate registry cache
+        // 4. Update module.json in renamed module if exists
+        $targetManifest = $targetPath.DIRECTORY_SEPARATOR.'module.json';
+        if ($this->files->exists($targetManifest)) {
+            $manifestData = json_decode((string) $this->files->get($targetManifest), true);
+            if (is_array($manifestData)) {
+                $manifestData['name'] = $newStudly;
+                $this->files->put($targetManifest, json_encode($manifestData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES).PHP_EOL);
+            }
+        }
+
+        // 5. Update dependencies referencing old module name in other modules
+        $renamedDepCount = 0;
+        if ($this->files->isDirectory($modulesPath)) {
+            foreach ($this->files->directories($modulesPath) as $otherDir) {
+                if ($otherDir === $targetPath) {
+                    continue;
+                }
+                $otherManifest = $otherDir.DIRECTORY_SEPARATOR.'module.json';
+                if ($this->files->exists($otherManifest)) {
+                    $otherData = json_decode((string) $this->files->get($otherManifest), true);
+                    if (is_array($otherData) && isset($otherData['dependencies']) && is_array($otherData['dependencies'])) {
+                        $modified = false;
+                        foreach ($otherData['dependencies'] as $idx => $dep) {
+                            if ($dep === $oldStudly || $dep === $oldSlug) {
+                                $otherData['dependencies'][$idx] = $newStudly;
+                                $modified = true;
+                            }
+                        }
+                        if ($modified) {
+                            $this->files->put($otherManifest, json_encode($otherData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES).PHP_EOL);
+                            $renamedDepCount++;
+                        }
+                    }
+                }
+            }
+        }
+
+        // 6. Invalidate registry cache
         $this->registry->flush();
         if ($this->registry->isCached()) {
             $this->callSilent('module:cache');

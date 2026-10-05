@@ -10,7 +10,9 @@ use Hatchyu\ModularLite\Console\Commands\MigrationMakeCommand;
 use Hatchyu\ModularLite\Console\Commands\ModelMakeCommand;
 use Hatchyu\ModularLite\Console\Commands\ModuleCacheCommand;
 use Hatchyu\ModularLite\Console\Commands\ModuleClearCommand;
+use Hatchyu\ModularLite\Console\Commands\ModuleDisableCommand;
 use Hatchyu\ModularLite\Console\Commands\ModuleDoctorCommand;
+use Hatchyu\ModularLite\Console\Commands\ModuleEnableCommand;
 use Hatchyu\ModularLite\Console\Commands\ModuleListCommand;
 use Hatchyu\ModularLite\Console\Commands\ModuleMakeCommand;
 use Hatchyu\ModularLite\Console\Commands\ModuleRenameCommand;
@@ -89,6 +91,8 @@ class ModularLiteServiceProvider extends ServiceProvider
                 CrudMakeCommand::class,
                 ModuleRenameCommand::class,
                 ModuleDoctorCommand::class,
+                ModuleEnableCommand::class,
+                ModuleDisableCommand::class,
                 ModuleListCommand::class,
                 ModuleCacheCommand::class,
                 ModuleClearCommand::class,
