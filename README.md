@@ -6,6 +6,11 @@
 
 A lightweight, zero-ceremony **Modular Architecture** package for Laravel applications. Designed for developers who want the organizational benefits of feature-based modules without the cognitive overhead of complex enterprise abstractions.
 
+> [!TIP]
+> **Building an Enterprise Application?**  
+> If you are building large-scale, complex enterprise platforms (ERP, CRM, Banking, Multi-domain systems) requiring strict **Domain-Driven Design (DDD) 4-layer boundaries**, **CQRS (Actions/Queries/Data)**, and architectural testing, check out our flagship enterprise package:  
+> 👉 **[`hatchyu/laravel-modular`](https://github.com/rajeshmk/laravel-modular)** (`composer require hatchyu/laravel-modular`)
+
 ---
 
 ## 🎯 Design Philosophy: Stay Close to Laravel
