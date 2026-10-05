@@ -1,0 +1,26 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{namespace}}\{{module}}\Database\Factories{{subNamespace}};
+
+use Illuminate\Database\Eloquent\Factories\Factory;
+use {{namespace}}\{{module}}\Models\{{model}};
+
+/**
+ * @extends Factory<{{model}}>
+ */
+class {{class}} extends Factory
+{
+    protected $model = {{model}}::class;
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        return [
+            // Define model factory attributes
+        ];
+    }
+}

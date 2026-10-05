@@ -1,0 +1,16 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{namespace}}\{{module}}\Controllers{{subNamespace}};
+
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+
+class {{class}}
+{
+    public function index(): View
+    {
+        return view('{{slug}}::index');
+    }
+}

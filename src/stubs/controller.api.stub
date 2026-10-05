@@ -1,0 +1,27 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{namespace}}\{{module}}\Controllers\Api{{subNamespace}};
+
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+
+class {{class}}
+{
+    public function index(Request $request): JsonResponse
+    {
+        return response()->json([
+            'data' => [],
+        ]);
+    }
+
+    public function show(int|string $id): JsonResponse
+    {
+        return response()->json([
+            'data' => [
+                'id' => $id,
+            ],
+        ]);
+    }
+}

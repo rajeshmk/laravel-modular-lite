@@ -1,0 +1,82 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{namespace}}\{{module}}\Controllers\Api{{subNamespace}};
+
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
+use {{namespace}}\{{module}}\Models\{{model}};
+use {{namespace}}\{{module}}\Requests\Store{{model}}Request;
+use {{namespace}}\{{module}}\Requests\Update{{model}}Request;
+use {{namespace}}\{{module}}\Resources\{{model}}Resource;
+
+class {{model}}Controller
+{
+    public function index(): JsonResponse
+    {
+        $items = {{model}}::query()->latest()->get();
+
+        return response()->json([
+            'data' => {{model}}Resource::collection($items),
+        ]);
+    }
+
+    public function store(Store{{model}}Request $request): JsonResponse
+    {
+        $item = {{model}}::query()->create($request->validated());
+
+        return response()->json([
+            'message' => '{{model}} created successfully.',
+            'data' => new {{model}}Resource($item),
+        ], Response::HTTP_CREATED);
+    }
+
+    public function show(int|string $id): JsonResponse
+    {
+        $item = {{model}}::query()->find($id);
+
+        if (! $item) {
+            return response()->json([
+                'message' => '{{model}} not found.',
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        return response()->json([
+            'data' => new {{model}}Resource($item),
+        ]);
+    }
+
+    public function update(Update{{model}}Request $request, int|string $id): JsonResponse
+    {
+        $item = {{model}}::query()->find($id);
+
+        if (! $item) {
+            return response()->json([
+                'message' => '{{model}} not found.',
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        $item->update($request->validated());
+
+        return response()->json([
+            'message' => '{{model}} updated successfully.',
+            'data' => new {{model}}Resource($item),
+        ]);
+    }
+
+    public function destroy(int|string $id): JsonResponse
+    {
+        $item = {{model}}::query()->find($id);
+
+        if (! $item) {
+            return response()->json([
+                'message' => '{{model}} not found.',
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        $item->delete();
+
+        return response()->json(null, Response::HTTP_NO_CONTENT);
+    }
+}

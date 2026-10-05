@@ -1,0 +1,13 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{namespace}}\{{module}}\Services{{subNamespace}};
+
+class {{class}}
+{
+    public function handle(): void
+    {
+        // Business logic here
+    }
+}

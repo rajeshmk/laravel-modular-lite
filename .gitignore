@@ -1,0 +1,9 @@
+/vendor
+/composer.lock
+.phpunit.result.cache
+.phpunit.cache
+.php-cs-fixer.cache
+tests/tmp/
+.DS_Store
+*.swp
+*.swo

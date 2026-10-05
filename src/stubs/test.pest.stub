@@ -1,0 +1,7 @@
+<?php
+
+declare(strict_types=1);
+
+it('performs expected {{module}} behavior', function () {
+    expect(true)->toBeTrue();
+});

@@ -1,0 +1,34 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{namespace}}\{{module}}\Models{{subNamespace}};
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class {{class}} extends Model
+{
+    use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        // Add fillable attributes
+    ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            // Add attribute casting
+        ];
+    }
+}
